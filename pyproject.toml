@@ -7,7 +7,7 @@ name = "ai-support-engine"
 version = "0.1.0"
 description = "Prototipo de clasificación de solicitudes de soporte"
 readme = "README.md"
-requires-python = ">=3.11,<3.13"
+requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi>=0.110,<1.0",
     "pydantic>=2.7,<3.0",

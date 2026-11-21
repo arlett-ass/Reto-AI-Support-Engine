@@ -14,7 +14,7 @@ El PR 0 prepara el contrato compartido y la estructura del paquete. La API y los
 
 ## Requisitos
 
-- Python 3.11 o 3.12 (el equipo debe usar la misma versión acordada).
+- Python 3.12.
 - Git.
 
 ## Instalación para desarrollo
