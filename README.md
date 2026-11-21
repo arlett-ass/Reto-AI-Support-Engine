@@ -10,7 +10,7 @@ El PR 0 prepara el contrato compartido y la estructura del paquete. La API y los
 
 - Angelica Arlett Santiago Serrano
 - Nicolás David Juarez Mendoza
-- Victor Manual Jimenez Suarez
+- Victor Manuel Jimenez Suarez
 
 ## Requisitos
 
