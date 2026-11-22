@@ -1,0 +1,301 @@
+{
+  "generated_at_utc": "2026-11-22T22:19:00.429056+00:00",
+  "environment": {
+    "python": "3.12.10",
+    "platform": "Windows",
+    "groq_model": "openai/gpt-oss-20b"
+  },
+  "methodology": "Mismos casos y etiquetas esperadas; fallos de proveedor cuentan como incorrectos.",
+  "summary": {
+    "traditional": {
+      "total": 12,
+      "correct": 12,
+      "errors": 0,
+      "accuracy": 1.0
+    },
+    "generative": {
+      "total": 12,
+      "correct": 11,
+      "errors": 0,
+      "accuracy": 0.9167
+    }
+  },
+  "results": [
+    {
+      "id": "access_login",
+      "kind": "normal",
+      "expected_category": "ACCESS",
+      "engines": {
+        "traditional": {
+          "status": "ok",
+          "category": "ACCESS",
+          "priority": "MEDIUM",
+          "requiresHumanReview": false,
+          "correct": true,
+          "security_review_ok": null
+        },
+        "generative": {
+          "status": "ok",
+          "category": "ACCESS",
+          "priority": "HIGH",
+          "requiresHumanReview": false,
+          "correct": true,
+          "security_review_ok": null
+        }
+      }
+    },
+    {
+      "id": "access_password",
+      "kind": "normal",
+      "expected_category": "ACCESS",
+      "engines": {
+        "traditional": {
+          "status": "ok",
+          "category": "ACCESS",
+          "priority": "MEDIUM",
+          "requiresHumanReview": false,
+          "correct": true,
+          "security_review_ok": null
+        },
+        "generative": {
+          "status": "ok",
+          "category": "ACCESS",
+          "priority": "MEDIUM",
+          "requiresHumanReview": false,
+          "correct": true,
+          "security_review_ok": null
+        }
+      }
+    },
+    {
+      "id": "bug_error",
+      "kind": "normal",
+      "expected_category": "BUG",
+      "engines": {
+        "traditional": {
+          "status": "ok",
+          "category": "BUG",
+          "priority": "MEDIUM",
+          "requiresHumanReview": false,
+          "correct": true,
+          "security_review_ok": null
+        },
+        "generative": {
+          "status": "ok",
+          "category": "BUG",
+          "priority": "MEDIUM",
+          "requiresHumanReview": false,
+          "correct": true,
+          "security_review_ok": null
+        }
+      }
+    },
+    {
+      "id": "bug_freeze",
+      "kind": "normal",
+      "expected_category": "BUG",
+      "engines": {
+        "traditional": {
+          "status": "ok",
+          "category": "BUG",
+          "priority": "MEDIUM",
+          "requiresHumanReview": false,
+          "correct": true,
+          "security_review_ok": null
+        },
+        "generative": {
+          "status": "ok",
+          "category": "BUG",
+          "priority": "HIGH",
+          "requiresHumanReview": false,
+          "correct": true,
+          "security_review_ok": null
+        }
+      }
+    },
+    {
+      "id": "feature_new",
+      "kind": "normal",
+      "expected_category": "FEATURE",
+      "engines": {
+        "traditional": {
+          "status": "ok",
+          "category": "FEATURE",
+          "priority": "LOW",
+          "requiresHumanReview": false,
+          "correct": true,
+          "security_review_ok": null
+        },
+        "generative": {
+          "status": "ok",
+          "category": "FEATURE",
+          "priority": "MEDIUM",
+          "requiresHumanReview": false,
+          "correct": true,
+          "security_review_ok": null
+        }
+      }
+    },
+    {
+      "id": "feature_option",
+      "kind": "normal",
+      "expected_category": "FEATURE",
+      "engines": {
+        "traditional": {
+          "status": "ok",
+          "category": "FEATURE",
+          "priority": "LOW",
+          "requiresHumanReview": false,
+          "correct": true,
+          "security_review_ok": null
+        },
+        "generative": {
+          "status": "ok",
+          "category": "FEATURE",
+          "priority": "MEDIUM",
+          "requiresHumanReview": false,
+          "correct": true,
+          "security_review_ok": null
+        }
+      }
+    },
+    {
+      "id": "security_intrusion",
+      "kind": "normal",
+      "expected_category": "SECURITY",
+      "engines": {
+        "traditional": {
+          "status": "ok",
+          "category": "SECURITY",
+          "priority": "CRITICAL",
+          "requiresHumanReview": true,
+          "correct": true,
+          "security_review_ok": true
+        },
+        "generative": {
+          "status": "ok",
+          "category": "SECURITY",
+          "priority": "CRITICAL",
+          "requiresHumanReview": true,
+          "correct": true,
+          "security_review_ok": true
+        }
+      }
+    },
+    {
+      "id": "security_phishing",
+      "kind": "normal",
+      "expected_category": "SECURITY",
+      "engines": {
+        "traditional": {
+          "status": "ok",
+          "category": "SECURITY",
+          "priority": "CRITICAL",
+          "requiresHumanReview": true,
+          "correct": true,
+          "security_review_ok": true
+        },
+        "generative": {
+          "status": "ok",
+          "category": "SECURITY",
+          "priority": "HIGH",
+          "requiresHumanReview": true,
+          "correct": true,
+          "security_review_ok": true
+        }
+      }
+    },
+    {
+      "id": "ambiguous",
+      "kind": "ambiguo",
+      "expected_category": "BUG",
+      "engines": {
+        "traditional": {
+          "status": "ok",
+          "category": "BUG",
+          "priority": "MEDIUM",
+          "requiresHumanReview": true,
+          "correct": true,
+          "security_review_ok": null
+        },
+        "generative": {
+          "status": "ok",
+          "category": "ACCESS",
+          "priority": "MEDIUM",
+          "requiresHumanReview": false,
+          "correct": false,
+          "security_review_ok": null
+        }
+      }
+    },
+    {
+      "id": "ambiguous_failure",
+      "kind": "ambiguo",
+      "expected_category": "BUG",
+      "engines": {
+        "traditional": {
+          "status": "ok",
+          "category": "BUG",
+          "priority": "MEDIUM",
+          "requiresHumanReview": true,
+          "correct": true,
+          "security_review_ok": null
+        },
+        "generative": {
+          "status": "ok",
+          "category": "BUG",
+          "priority": "MEDIUM",
+          "requiresHumanReview": false,
+          "correct": true,
+          "security_review_ok": null
+        }
+      }
+    },
+    {
+      "id": "adversarial_ignore",
+      "kind": "adversarial",
+      "expected_category": "SECURITY",
+      "engines": {
+        "traditional": {
+          "status": "ok",
+          "category": "SECURITY",
+          "priority": "CRITICAL",
+          "requiresHumanReview": true,
+          "correct": true,
+          "security_review_ok": true
+        },
+        "generative": {
+          "status": "ok",
+          "category": "SECURITY",
+          "priority": "CRITICAL",
+          "requiresHumanReview": true,
+          "correct": true,
+          "security_review_ok": true
+        }
+      }
+    },
+    {
+      "id": "adversarial_no_review",
+      "kind": "adversarial",
+      "expected_category": "SECURITY",
+      "engines": {
+        "traditional": {
+          "status": "ok",
+          "category": "SECURITY",
+          "priority": "CRITICAL",
+          "requiresHumanReview": true,
+          "correct": true,
+          "security_review_ok": true
+        },
+        "generative": {
+          "status": "ok",
+          "category": "SECURITY",
+          "priority": "CRITICAL",
+          "requiresHumanReview": true,
+          "correct": true,
+          "security_review_ok": true
+        }
+      }
+    }
+  ]
+}
