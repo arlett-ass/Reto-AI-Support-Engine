@@ -1,7 +1,7 @@
-"""Pruebas aisladas del motor: nunca requieren una clave real ni consumen API."""
+"""Pruebas del SDK Groq sin realizar llamadas externas."""
 
 import json
-from urllib.error import HTTPError, URLError
+from types import SimpleNamespace
 
 import pytest
 
@@ -10,96 +10,115 @@ from ai_support_engine.generative import classify_generative
 from ai_support_engine.models import Category, Mode
 
 
-class FakeResponse:
-    def __init__(self, payload):
-        self.payload = payload
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *_):
-        return False
-
-    def read(self):
-        return json.dumps(self.payload).encode("utf-8")
-
-
-def provider_response(**overrides):
+def provider_payload(**overrides):
     result = {
         "category": "ACCESS",
         "priority": "MEDIUM",
-        "response": "Prueba la recuperación de contraseña.",
+        "response": "Utiliza la recuperación de contraseña.",
         "requiresHumanReview": False,
         "mode": "generative",
     }
     result.update(overrides)
-    return {"choices": [{"message": {"content": json.dumps(result)}}]}
+    return result
 
 
-def test_missing_key_is_configuration_error(monkeypatch):
+def fake_completion(payload):
+    content = json.dumps(payload) if not isinstance(payload, str) else payload
+    return SimpleNamespace(
+        choices=[SimpleNamespace(message=SimpleNamespace(content=content))]
+    )
+
+
+def mock_client(monkeypatch, completion=None, failure=None):
+    class FakeCompletions:
+        def create(self, **kwargs):
+            if failure is not None:
+                raise failure
+            assert kwargs["response_format"] == {"type": "json_object"}
+            assert kwargs["messages"][0]["role"] == "system"
+            assert kwargs["messages"][1]["role"] == "user"
+            return completion
+
+    class FakeGroq:
+        def __init__(self, **kwargs):
+            assert kwargs["api_key"] == "test-key"
+            assert kwargs["timeout"] == 30.0
+            self.chat = SimpleNamespace(completions=FakeCompletions())
+
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setattr("ai_support_engine.generative.Groq", FakeGroq)
+
+
+def test_missing_key(monkeypatch):
     monkeypatch.delenv("GROQ_API_KEY", raising=False)
     with pytest.raises(EngineConfigurationError):
-        classify_generative("No puedo iniciar sesión")
+        classify_generative("Mensaje")
 
 
-def test_real_http_request_shape_and_contract(monkeypatch):
-    monkeypatch.setenv("GROQ_API_KEY", "test-token")
-    monkeypatch.setenv("GROQ_MODEL", "test-model")
+def test_missing_model(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("GROQ_MODEL", "")
+    with pytest.raises(EngineConfigurationError):
+        classify_generative("Mensaje")
 
-    def fake_urlopen(req, timeout):
-        assert req.full_url.endswith("/chat/completions")
-        assert timeout == 30
-        assert req.get_header("Authorization") == "Bearer test-token"
-        body = json.loads(req.data)
-        assert body["model"] == "test-model"
-        assert body["response_format"] == {"type": "json_object"}
-        assert body["messages"][1]["content"] == "No puedo iniciar sesión"
-        return FakeResponse(provider_response())
 
-    monkeypatch.setattr("ai_support_engine.generative.request.urlopen", fake_urlopen)
+def test_contract_and_sdk_call(monkeypatch):
+    mock_client(monkeypatch, fake_completion(provider_payload()))
     result = classify_generative("No puedo iniciar sesión")
     assert result.category is Category.ACCESS
     assert result.mode is Mode.GENERATIVE
 
 
-def test_security_requires_human_review(monkeypatch):
-    monkeypatch.setenv("GROQ_API_KEY", "test-token")
-    monkeypatch.setattr(
-        "ai_support_engine.generative.request.urlopen",
-        lambda *_args, **_kwargs: FakeResponse(
-            provider_response(category="SECURITY", priority="HIGH", requiresHumanReview=True)
-        ),
-    )
-    result = classify_generative("Detecté un acceso no autorizado")
+def test_security_requires_review(monkeypatch):
+    mock_client(monkeypatch, fake_completion(
+        provider_payload(category="SECURITY", priority="HIGH", requiresHumanReview=True)
+    ))
+    result = classify_generative("Alguien accedió a mi cuenta")
     assert result.category is Category.SECURITY
     assert result.requires_human_review is True
 
 
-@pytest.mark.parametrize("invalid", [
-    provider_response(category="OTHER"),
-    provider_response(mode="traditional"),
-    provider_response(category="SECURITY", requiresHumanReview=False),
-    {"choices": []},
-    {"choices": [{"message": {"content": "esto no es JSON"}}]},
-    {"choices": [{"message": {"content": "[]"}}]},
+@pytest.mark.parametrize("payload", [
+    provider_payload(category="OTHER"),
+    provider_payload(mode="traditional"),
+    provider_payload(category="SECURITY", requiresHumanReview=False),
+    provider_payload(requiresHumanReview="false"),
+    provider_payload(extra="invalido"),
+    "texto no JSON",
+    "[]",
+    None,
 ])
-def test_invalid_provider_outputs_fail_closed(monkeypatch, invalid):
-    monkeypatch.setenv("GROQ_API_KEY", "test-token")
-    monkeypatch.setattr(
-        "ai_support_engine.generative.request.urlopen",
-        lambda *_args, **_kwargs: FakeResponse(invalid),
-    )
+def test_invalid_output(monkeypatch, payload):
+    if payload is None:
+        completion = SimpleNamespace(choices=[])
+    else:
+        completion = fake_completion(payload)
+    mock_client(monkeypatch, completion)
     with pytest.raises(EngineExecutionError):
         classify_generative("Mensaje")
 
 
-@pytest.mark.parametrize("failure", [URLError("network"), TimeoutError("timeout"), HTTPError("url", 429, "rate limit", {}, None)])
-def test_provider_failures_are_controlled(monkeypatch, failure):
-    monkeypatch.setenv("GROQ_API_KEY", "test-token")
+def test_provider_http_failure(monkeypatch):
+    from groq import APIStatusError
+    import httpx
 
-    def fail(*_args, **_kwargs):
-        raise failure
+    response = httpx.Response(
+        403,
+        request=httpx.Request("POST", "https://api.groq.com/openai/v1/chat/completions"),
+    )
+    failure = APIStatusError("403", response=response, body=None)
+    mock_client(monkeypatch, failure=failure)
+    with pytest.raises(EngineExecutionError, match="No se pudo consultar"):
+        classify_generative("Mensaje")
 
-    monkeypatch.setattr("ai_support_engine.generative.request.urlopen", fail)
-    with pytest.raises(EngineExecutionError):
+
+def test_provider_connection_failure(monkeypatch):
+    from groq import APIConnectionError
+    import httpx
+
+    failure = APIConnectionError(
+        request=httpx.Request("POST", "https://api.groq.com/openai/v1/chat/completions")
+    )
+    mock_client(monkeypatch, failure=failure)
+    with pytest.raises(EngineExecutionError, match="No se pudo consultar"):
         classify_generative("Mensaje")
