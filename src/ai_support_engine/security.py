@@ -16,7 +16,7 @@ SECURITY_PATTERNS = (
     r"\b(entraron|ingresaron|accedieron) a mi (cuenta|perfil|sistema)\b",
     r"\b(robaron|robada|robado|hackearon|hackeada|hackeado|hackeo|hackeos)\b",
     r"\b(phishing|ransomware|malware|virus|brecha de seguridad|filtracion de datos)\b",
-    r"\b(contrasena|password|credenciales|token|clave) (expuesta|expuesto|filtrada|filtrado|robada|robado|comprometida|comprometido)\b",
+    r"\b(contrasena|password|credenciales|token|clave) (?:fue|estan|esta|ha sido|fueron)? ?(expuesta|expuesto|filtrada|filtrado|robada|robado|comprometida|comprometido)\b",
     r"\b(vulnerabilidad|inyeccion sql|sql injection|fuga de informacion)\b",
     r"\b(suplantacion de identidad|actividad sospechosa|intento de intrusion)\b",
 )
