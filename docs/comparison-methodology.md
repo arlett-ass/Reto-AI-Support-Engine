@@ -34,5 +34,22 @@ En cuatro casos (`access_login`, `bug_freeze`, `feature_new`, `feature_option`) 
 4. Ejecutar `python scripts/compare_engines.py`.
 5. Inspeccionar `artifacts/comparison_results.json` antes de subirlo: no incluir secretos ni datos reales sensibles.
 
-## Pendiente antes de entrega
-Actualizar el README para reflejar que los motores y la API ya están implementados; documentar comandos de ejecución y el contrato HTTP. Validar el PR y coordinar las conclusiones finales con el equipo.
+## Estado de la documentación y evidencias
+
+El README definitivo fue actualizado e integrado a development mediante el PR #6.
+
+La comparación final se presenta en
+[comparison.md](../artifacts/comparison.md),
+incluyendo la tabla de 12 casos, los resultados de ambos motores
+y una conclusión técnica de menos de 150 palabras.
+
+Los resultados originales se conservan en
+[comparison_results.json](../artifacts/comparison_results.json).
+
+También se verificó el funcionamiento de la API mediante
+solicitudes HTTP reales a los motores tradicional y generativo.
+El entorno local superó 64 pruebas automatizadas.
+
+Antes de la entrega se debe validar nuevamente development,
+integrar los cambios finales a main mediante un Pull Request
+y comprobar el funcionamiento de la versión entregada.
