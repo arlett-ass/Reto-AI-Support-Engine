@@ -1,8 +1,8 @@
 # Comparación final de motores — Reto AI Support Engine
 
-**Equipo:** Angélica Arlett Santiago Serrano, Nicolás David Juárez Mendoza y Víctor Manuel Jiménez Suárez.  
-**Evidencia original:** [`comparison_results.json`](comparison_results.json).  
-**Ejecución registrada:** 22 de noviembre de 2026, 22:19 UTC.  
+**Equipo:** Angélica Arlett Santiago Serrano, Nicolás David Juárez Mendoza y Víctor Manuel Jiménez Suárez.
+**Evidencia original:** [`comparison_results.json`](comparison_results.json).
+**Ejecución registrada:** 22 de noviembre de 2026, 22:19 UTC.
 **Entorno:** Windows, Python 3.12.10 y Groq con `openai/gpt-oss-20b`.
 
 ## Método
