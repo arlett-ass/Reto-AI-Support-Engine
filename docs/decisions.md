@@ -8,8 +8,7 @@
 - Integrar el trabajo en `development` y mantener `main` como rama estable.
 - Mantener el paquete en `src/ai_support_engine/` y las pruebas en `tests/`.
 
-## Pendiente de confirmar
+## Motor generativo confirmado
 
-- La conversación del equipo menciona “Grop” para el motor generativo. Antes del PR generativo hay que confirmar si se refiere a Groq y acordar el identificador del modelo disponible.
-
-No se guardan claves ni configuración privada en el repositorio.
+- Se utiliza Groq mediante su SDK de Python, con `openai/gpt-oss-20b` como modelo predeterminado en `generative.py`.
+- La clave se configura mediante la variable de entorno `GROQ_API_KEY`. No se guardan claves ni configuración privada en el repositorio.
