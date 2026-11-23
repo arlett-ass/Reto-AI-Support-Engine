@@ -48,8 +48,11 @@ Reto-AI-Support-Engine/
 ├── scripts/
 │   └── compare_engines.py      # Comparación de ambos motores
 ├── docs/
+│   ├── architecture.md         # Arquitectura implementada
+│   ├── decisions.md            # Decisiones técnicas
 │   └── comparison-methodology.md
 ├── artifacts/
+│   ├── comparison.md           # Tabla y conclusión técnica
 │   └── comparison_results.json # Evidencia de una ejecución real
 ├── .env.example                # Ejemplo de configuración (sin claves)
 ├── pyproject.toml              # Metadatos y dependencias principales
@@ -294,7 +297,7 @@ El script utiliza los 12 casos sintéticos de `fixtures/comparison_cases.json` y
 
 El generativo clasificó como `ACCESS` un caso ambiguo etiquetado como `BUG`. También existieron diferencias de prioridad entre ambos motores, pero **la exactitud informada evalúa solamente categorías**, no la calidad de las respuestas ni la prioridad. Ambos motores solicitaron revisión humana en los cuatro casos clasificados como `SECURITY` dentro de la comparación.
 
-Consulta la [metodología de comparación](docs/comparison-methodology.md) y la [evidencia JSON de la ejecución](artifacts/comparison_results.json).
+Consulta la [tabla completa de los 12 casos y la conclusión técnica](artifacts/comparison.md), la [metodología de comparación](docs/comparison-methodology.md) y la [evidencia JSON de la ejecución](artifacts/comparison_results.json).
 
 ## 12. Seguridad y limitaciones
 
@@ -307,9 +310,11 @@ Consulta la [metodología de comparación](docs/comparison-methodology.md) y la 
 - No se midieron tiempos de respuesta, costos del proveedor ni exactitud de la prioridad. No deben afirmarse mejoras en esas dimensiones.
 - Las pruebas de mensajes adversariales cubren ejemplos concretos, no garantizan seguridad absoluta.
 
-## 13. Conclusión
+## 13. Conclusión técnica de la comparación (126 palabras)
 
-El proyecto permite recibir solicitudes de soporte y procesarlas con dos motores diferentes mediante una misma API. El tradicional ofrece un comportamiento reproducible para los patrones definidos, mientras que el generativo permite interpretar mensajes utilizando un modelo externo. Los dos comparten el contrato JSON y aplican la regla de revisión humana para incidentes de seguridad. La evaluación y el código demuestran el funcionamiento del prototipo dentro del alcance probado, pero se necesita un conjunto de pruebas más amplio para sacar conclusiones generales.
+En los 12 mensajes evaluados, el motor tradicional obtuvo el mejor resultado de clasificación por categoría: acertó 12 de 12 casos (100 %), mientras que el generativo acertó 11 de 12 (91.7 %). La diferencia ocurrió en un mensaje ambiguo, que el modelo generativo clasificó como ACCESS en lugar de BUG. Sin embargo, este resultado no significa que el tradicional sea mejor en general, ya que las pruebas son pocas y sus reglas coinciden con varios ejemplos; además, utiliza BUG como categoría predeterminada. El generativo permite interpretar mensajes y redactar respuestas según el contexto, pero depende de Groq y puede variar. Ambos motores identificaron los casos de seguridad evaluados y solicitaron revisión humana. Concluimos que los dos cumplen el objetivo del prototipo dentro del conjunto probado.
+
+La [tabla detallada de resultados](artifacts/comparison.md) contiene las categorías, prioridades, validez del formato y aciertos de ambos motores. Los resultados originales están en [comparison_results.json](artifacts/comparison_results.json).
 
 ## 14. Flujo de integración y entrega
 
